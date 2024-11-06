@@ -96,9 +96,8 @@ app.listen(port, '127.0.0.1', () => {}); //rendo l'app utilizzabile mediante loc
 // ------------------------------------------------------------------------------
 
 //https://hayageek.com/aes-encryption-decryption-in-nodejs/
-//inizialmente la mail era salvata con l'hashing sha256 ma questo non permetteva il procedimento inverso 
-//(utile se l'utente vuole modificare la mail dalla pagina dell'account... per questo l'ho modificato
-//e ho implementato l'aes256 in modo simmetrico (Senza iv random)(sempre della libreria crypto)
+//inizialmente la mail era salvata con l'hashing sha256 ma questo non permetteva il procedimento inverso utile se 
+//l'utente vuole modificare la mail dalla pagina dell'account... per questo ho scleto di usare l'aes256 in modo simmetrico (Senza iv random)
 
 /**
  * Funzione per cifrare l'indirizzo email (encrypt aes256)

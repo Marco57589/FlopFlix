@@ -67,7 +67,7 @@
 Clone the project
 
 ```bash
-  git clone https://github.com/Marco57589/FlopFlix
+  git clone https://link-to-project
 ```
 Navigate project folder
 
