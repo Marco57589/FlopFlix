@@ -8,11 +8,17 @@ const bcrypt = require('bcrypt'); //libreria per usare bcrypt
 const crypto = require('crypto'); //libreria per usare aes-256
 const _ = require('lodash'); //libreria per confrontare oggetti
 const os = require('os');
+const fs = require('fs');  //file system
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 require('dotenv').config();
+
+if (!fs.existsSync('.env')) {
+    console.error('File .env non trovato.');
+    process.exit(1);
+}
 
 const port = 8080;
 const app = express();
