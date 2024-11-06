@@ -172,10 +172,19 @@ textarea{
     align-items: center !important;
 }
 
+.alert{
+    display: flex !important;
+    align-items: center !important;
+}
+
 .alert-warning{
     background-color: #eab34f !important;
     border: none !important;
     color: black !important;
+}
+
+.alert-hide{
+    display: none !important;
 }
 
 /* flopy eg*/
