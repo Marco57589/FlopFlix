@@ -443,7 +443,7 @@ app.post('/verify-email', ensureUnAuthenticated, (req, res, next) => {
     queryDatabase('SELECT * FROM user WHERE email = ?', [encryptEmail(email)], 'get')
         .then(user => {
             if (user) { //se l'email è già in uso ricarico la pagina mostrando l'errore
-                return res.render('register-1', { error: 'Questa email è già in uso, scegli un\'altra email.' });
+                return res.render('register-1', { error: 'Questo indirizzo email è già in uso, scegli un\'altro indirizzo.' });
             }
             req.session.email = email;
             return res.redirect('/register-step-2');
