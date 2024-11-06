@@ -67,20 +67,14 @@
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/Marco57589/FlopFlix
 ```
 Navigate project folder
 
 ```bash
   cd flopflix
 ```
-Install FlopFlix with npm
-
-```bash
-  npm install
-```
-
-Install dependencies
+Install FlopFlix and dependencies with npm
 
 ```bash
   npm install
@@ -100,7 +94,7 @@ Run database script with API
 Start the server
 
 ```bash
-  npm run start
+  npm start
 ```
 
     
