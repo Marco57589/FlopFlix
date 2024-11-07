@@ -1043,8 +1043,8 @@ app.post('/account', ensureAuthenticated, async (req, res) => {
             }
 
             //verifica se la nuova password è stata inserita e ha la lunghezza adeguata
-            if (newPassword.length < 8 || newPassword.length > 16) {
-                return res.render('account', { user: { ...user, email: decryptEmail(user.email) }, warning: 'La nuova password deve essere lunga tra 8 e 16 caratteri.' });
+            if (newPassword.length < 6 || newPassword.length > 16) {
+                return res.render('account', { user: { ...user, email: decryptEmail(user.email) }, warning: 'La nuova password deve essere lunga tra 6 e 16 caratteri.' });
             }
 
             //verifica se è stata inserita la conferma della password

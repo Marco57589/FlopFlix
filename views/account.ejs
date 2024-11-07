@@ -65,21 +65,21 @@
                                     <div class="form-group">
                                         <div class="input-wrapper">
                                             <label for="currentPassword">Password Attuale:</label>
-                                            <input id="currentPassword" class="form-control" type="password" name="currentPassword" placeholder="Inserisci password attuale" title="La password deve essere di almeno 8 caratteri fino a massimo 16">
+                                            <input id="currentPassword" class="form-control" type="password" name="currentPassword" pattern=".{6,16}" placeholder="Inserisci password attuale" title="La password deve essere di almeno 6 caratteri fino a massimo 16">
                                             <i class="material-icons show-password" onclick="togglePassword('currentPassword')">visibility_off</i>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="input-wrapper">
                                             <label for="newPassword">Nuova Password:</label>
-                                            <input id="newPassword" class="form-control" type="password" name="newPassword" pattern=".{8,16}" placeholder="Inserisci nuova password" title="La password deve essere di almeno 8 caratteri fino a massimo 16">
+                                            <input id="newPassword" class="form-control" type="password" name="newPassword" pattern=".{6,16}" placeholder="Inserisci nuova password" title="La password deve essere di almeno 6 caratteri fino a massimo 16">
                                             <i class="material-icons show-password" onclick="togglePassword('newPassword')">visibility_off</i>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="input-wrapper">
                                             <label for="confirmPassword">Conferma Password:</label>
-                                            <input id="confirmPassword" class="form-control" type="password" name="confirmPassword" pattern=".{8,16}" placeholder="Conferma nuova password" title="La password deve essere di almeno 8 caratteri fino a massimo 16">
+                                            <input id="confirmPassword" class="form-control" type="password" name="confirmPassword" pattern=".{6,16}" placeholder="Conferma nuova password" title="La password deve essere di almeno 6 caratteri fino a massimo 16">
                                             <i class="material-icons show-password" onclick="togglePassword('confirmPassword')">visibility_off</i>
                                         </div>
                                     </div>
