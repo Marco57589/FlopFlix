@@ -1133,6 +1133,7 @@ app.post('/account', ensureAuthenticated, async (req, res) => {
         //se passa tutti i controlli e se i due "utenti" sono diversi allora procendo ad aggiornare l'utente
         db.run(updateQuery, [updatedUser.nome, updatedUser.cognome, emailToUpdate, updatedUser.ddn, updatedUser.telefono, passwordToUpdate, userId], (err) => {
             if (err) {
+                console.log(err.msg);
                 return res.render('account', { user: { ...user, email: decryptEmail(user.email) }, error: 'Errore durante l\'aggiornamento dei dati. Riprova più tardi.' });
             }
 

@@ -427,7 +427,7 @@ un oggetto "dizionaro" con il corrispettivo in inglese*/
 
 const categories = {
     'Titoli del momento': 'Trending',
-    'Classici TV': 'Docudrama', //Uso docudrama Visto che su ombd non é presente tale categoria
+    'Classici TV': 'Film-Noir', //Uso Film-Noir visto che su ombd non é presente tale categoria
     'Serie TV': 'TV Series',
     'Cartoni': 'Cartoons',
     'Anime': 'Anime',
@@ -443,78 +443,83 @@ const categories = {
 };
 
 //OMDb API
+let skipped = 0;
 
 async function fetchMovies(category) {
-    const film = [];
-    for (let i = 1; i <= 30; i++) { //numero pagine
+    const films = [];
+    for (let i = 1; i <= 40; i++) { //numero pagine
         const response = await axios.get(`http://www.omdbapi.com/?s=${encodeURIComponent(category)}&page=${i}&apikey=${omdbApiKey}`);
         const data = response.data;
 
         if (data.Response === "True") {
-            film.push(...data.Search);
-        }
-        if (film.length >= 15) { //al raggiungimento di 15 film termino il ciclo
+            for (const film of data.Search) {
+                const detailsResponse = await axios.get(`http://www.omdbapi.com/?i=${film.imdbID}&apikey=${omdbApiKey}`);
+                const details = detailsResponse.data;
+                const titolo = sanitizeString(details.Title) || null;
+                const anno_uscita = parseInt(details.Year) || null;
+                const regista = sanitizeString(details.Director) || null;
+
+                if (details.Response === "True" && titolo && anno_uscita && regista) { //se ho questi 3 campi allora inserisco il film
+                    films.push(details);  //aggiungo il film alla lista solo se soddisfa i requisiti
+
+                    if (films.length >= 15) { //termina il ciclo se abbiamo raggiunto i 15 film
+                        return films;
+                    }
+                } else {
+                    skipped++;
+                    console.error(`[OMDbAPI] Film "${details.Title || 'Sconosciuto'}" incompleto, salto.`);
+                }
+                await delay(500);
+            }
+        } else {
+            console.error(`[OMDbAPI] Nessun risultato trovato per la categoria: ${category}`);
             break;
         }
         await delay(500);
     }
-    return film
+    return films;
 }
 
 async function populateFilmsWithApi() {
-    console.log("\nPopolamento FILM mediante ombd e youtube api..... ");
-    let skipped = 0;
+    console.log("\nPopolamento FILM mediante OMDb e YouTube API..... ");
     let durata = 0;
     for (const [categoria, enCategory] of Object.entries(categories)) {
         const films = await fetchMovies(enCategory);
 
-        for (const film of films) {
-            const detailsResponse = await axios.get(`http://www.omdbapi.com/?i=${film.imdbID}&apikey=${omdbApiKey}`);
-            const details = detailsResponse.data;
-
-            if (details.Response === "True") {
-                durata = 0;
-                if (details.Runtime) {
-                    const match = details.Runtime.match(/(\d+)/);
-                    //se non ha una durata la genero automaticamente, questo per non scartare troppi film 
-                    //(per evitare di avere l'api bloccata (soprattutto da youtube che ha un limite basso di richieste rispetto a omdb) )
-                    durata = match ? parseInt(match[0]) : Math.floor((Math.random() * 596) + 5);
-
-                    //potrei generare anche gli altri campi mancanti, ma ho deciso di farlo solo per la durata perché é impossibile non averla,
-                    //se hai un film hai per forza una durata (ma puoi non avere anno, descrizione e regista)
-                }
-                
-                const titolo = sanitizeString(details.Title) || null;
-                const anno_uscita = parseInt(details.Year) || null;
-                const regista = sanitizeString(details.Director) || null;
-                const descrizione = sanitizeString(details.Plot);
-                const limeta = 0;
-                const trailer = await getFirstTrailerLink(`${titolo} trailer`);
-
-                /*campi in base a cui escludo le richieste, sono stato "generoso" rendendo necessario solo il titolo e l'anno, questo
-                sempre per non esaurire i limiti di richiesta dell'api*/
-                if (!titolo || !anno_uscita || !regista || !categoria) {
-                    console.error(`[OMDbAPI] Film "${titolo}" incompleto, passo al prossimo.`);
-                    skipped++;
-                    continue;
-                }
-
-                const sql = `INSERT INTO film (titolo, anno_uscita, durata, regista, categoria, descrizione, limeta, trailer) VALUES
-                ("${titolo}", ${anno_uscita}, ${durata}, "${regista}", "${categoria}", "${descrizione}", ${limeta}, "${trailer}");`;
-
-                db.run(sql, (err) => {
-                    if (err) {
-                        console.error('[OMDbAPI] Errore durante l\'inserimento del film:', err.message);
-                        console.log(sql)
-                    } else {
-                        console.log(`[OMDbAPI] Film: Titolo: ${titolo}, Anno: ${anno_uscita}, Durata: ${durata}, Regista: ${regista}, Categoria: ${categoria} inserito correttamente nel database.`);
-                    }
-                });
+        for (const details of films) {
+            durata = 0;
+            if (details.Runtime) {
+                const match = details.Runtime.match(/(\d+)/);
+                durata = match ? parseInt(match[0]) : Math.floor((Math.random() * 596) + 5);
             }
+
+            const titolo = sanitizeString(details.Title) || null;
+            const anno_uscita = parseInt(details.Year) || null;
+            const regista = sanitizeString(details.Director) || null;
+            const descrizione = sanitizeString(details.Plot);
+            const limeta = details.Rated && details.Rated !== "N/A" ? 1 : 0;
+            let trailer;
+
+            try {
+                trailer = await getFirstTrailerLink(`${titolo} trailer`);
+            } catch (error) {
+                console.error(`[YouTubeAPI] Errore nel recuperare il trailer per "${titolo}":`, error.message);
+                trailer = null;
+            }
+            const sql = `INSERT INTO film (titolo, anno_uscita, durata, regista, categoria, descrizione, limeta, trailer) VALUES
+            ("${titolo}", ${anno_uscita}, ${durata}, "${regista}", "${categoria}", "${descrizione}", ${limeta}, "${trailer}");`;
+
+            db.run(sql, (err) => {
+                if (err) {
+                    console.error('[OMDbAPI] Errore durante l\'inserimento del film:', err.message);
+                } else {
+                    console.log(`[OMDbAPI] Film: Titolo: ${titolo}, Anno: ${anno_uscita}, Durata: ${durata}, Regista: ${regista}, Categoria: ${categoria} inserito correttamente nel database.`);
+                }
+            });
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
     }
-    console.log("Caricamento mediante API completato con successo! Film saltati: "+skipped);
+    console.log("[OMDbApi]Caricamento film completato! Film saltati: " + skipped);
 }
 
 //-------------------------------------------------------------------------------------------------------------------------

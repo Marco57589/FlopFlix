@@ -202,13 +202,11 @@ textarea{
     cursor: help !important;
 }
 
-
 @media (max-width: 1080px) {
     .navbar {
         flex-direction: row;
         justify-content: space-between;
     }
-  
 }
 
 @media (max-width: 768px) {
