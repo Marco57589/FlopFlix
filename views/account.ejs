@@ -7,6 +7,8 @@
     
     <link href="../css/account_style.css" rel="stylesheet">
     <link href="../css/footer_style.css" rel="stylesheet">
+    <script src="/js/account.js"></script>
+
 </head>
 
 <body>
@@ -33,7 +35,7 @@
                         <h2 class="sotto-titolo">Dettagli account</h2>
 
                         <div class="account-box">
-                            <div class="form-row">
+                            <div class="form-row mt-2">
                                 <label class="sotto-titolo">Email:</label>
                                 <span><%= user.email %></span>
                                 <a href="#" id="editMail">Modifica Email</a>
@@ -50,12 +52,6 @@
                                         <label class="confirm-text" for="confirmEmail">Conferma Nuova Email:</label>
                                         <input id="confirmEmail" class="col-md-5 form-control" type="email" name="confermaEmail" placeholder="Conferma nuova email">
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="input-wrapper">
-                                    <label class="sotto-titolo telefono">Telefono:</label>
-                                    <input type="text" id="telefono" class="form-control" name="telefono" placeholder="Inserisci il numero di telefono*" value="<%= user.telefono %>" pattern="[0-9]{6,16}" title="Il numero di telefono deve contenere solo numeri ed essere lungo minimo 6 e massimo 16">
                                 </div>
                             </div>
                             <div class="form-row">
@@ -110,6 +106,13 @@
 
                             <div class="form-row">
                                 <div class="input-wrapper">
+                                    <label class="sotto-titolo telefono">Telefono:</label>
+                                    <input type="text" id="telefono" class="form-control" name="telefono" placeholder="Inserisci il numero di telefono*" value="<%= user.telefono %>" pattern="[0-9]{6,16}" title="Il numero di telefono deve contenere solo numeri ed essere lungo minimo 6 e massimo 16">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="input-wrapper">
                                     <label class="sotto-titolo" for="ddn">Data di nascita:</label>
                                     <input type="date" id="ddn" class="form-control" name="ddn" value="<%= user.ddn %>" min="1914-01-01">
                                 </div>
@@ -133,6 +136,5 @@
     <%- include('partials/footer', type = 2); %>
     </footer>
 
-    <script src="/js/account.js"></script>
 </body>
 </html>
