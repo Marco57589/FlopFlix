@@ -1,9 +1,9 @@
 'use strict'
 
-const sqlite3 = require('sqlite3').verbose();
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const axios = require('axios');
+const sqlite3 = require('sqlite3').verbose(); //importiamo sqlite
+const bcrypt = require('bcrypt'); //usato per cifrare le password
+const crypto = require('crypto'); //usato per cifare le mail
+const axios = require('axios'); //usato per richieste http
 
 require('dotenv').config();
 
@@ -299,12 +299,13 @@ const populateFilmsWithoutApi = `
 //-------------------------------------------------------------------------------------------------------------------------
 // Popolazione tabelle
 
-// metodo per popolare gli utenti senza l'utilizzo dell'api RandomUser (viene usato solo in caso di errore - su specifica richiesta o se offline)
+// metodo per popolare gli utenti senza l'utilizzo dell'api RandomUser (eseguibile se l'app risulta offline o se viene eseguito lo script senza il flag api)
 const populateUsersWithoutApi = async () => {   
     const users = [
-        { email: 'giovanni1@gmail.com', password: 'password', nome: 'giovanni', cognome: 'paskoly', ddn: '2000-09-12', telefono: 3453532115, ruolo: 'user' },
+        { email: 'antonio@hotmail.it', password: 'antonino', nome: 'Antonino', cognome: 'Cucchiaiolo', ddn: '1975-02-10', telefono: 3776548332, ruolo: 'user' },
+        { email: 'eli.piscone@libero.com', password: 'eliso255', nome: 'Elisa', cognome: 'Piscone', ddn: '1999-12-25', telefono: null, ruolo: 'user' },
+        { email: 'giovanni1@gmail.com', password: 'password', nome: 'Giovanni', cognome: 'Pasquale', ddn: '2000-09-12', telefono: 3453532115, ruolo: 'user' },
         { email: 'admin@gmail.com', password: 'adminadmin', nome: 'Elone', cognome: 'Maschera', ddn: '2005-01-15', telefono: 3777465234, ruolo: 'admin' },
-        { email: 'marco@gmail.com', password: 'cornelius', nome: 'marco', cognome: 'papa', ddn: '2001-06-12', telefono: 3142387846 ,ruolo: 'user' }
     ];
 
     for (const user of users) {
@@ -359,10 +360,12 @@ const populateUsersWithApi = async () => {
             return {email: email, password: password, nome: nome, cognome: cognome, ddn: ddn, telefono: telefono, ruolo: ruolo};
         });
 
-        //inserisco manualmente due sample-utenti creati da me (incluso il ruolo di admin)
+        //inserisco anche gli  sample-utenti creati da me (incluso il ruolo di admin)
+        users.push({ email: 'antonio@hotmail.it', password: 'antonino', nome: 'Antonino', cognome: 'Cucchiaiolo', ddn: '1975-02-10', telefono: 3776548332, ruolo: 'user' });
+        users.push({ email: 'eli.piscone@libero.com', password: 'eliso255', nome: 'Elisa', cognome: 'Piscone', ddn: '1999-12-25', telefono: null, ruolo: 'user' });
+        users.push({ email: 'giovanni1@gmail.com', password: 'password', nome: 'Giovanni', cognome: 'Pasquale', ddn: '2000-09-12', telefono: 3453532115, ruolo: 'user' });
         users.push({ email: 'admin@gmail.com', password: 'adminadmin', nome: 'Elone', cognome: 'Maschera', ddn: '2005-01-15', telefono: 3777465234, ruolo: 'admin' });
-        users.push({ email: 'giovanni@gmail.com', password: 'password', nome: 'giovanni', cognome: 'paskoly', ddn: '2000-09-12', telefono: 3453532115, ruolo: 'user' });
-       
+        
         for (const user of users) {
             const encryptedMail = encryptEmail(user.email);
             const hashedPassword = await bcrypt.hash(user.password, 10);
@@ -372,7 +375,7 @@ const populateUsersWithApi = async () => {
                 if (err) {
                     console.error('Errore durante l\'inserimento dell\'utente:', err);
                 } else {
-                    console.log(`\tUtente ->${user.email}<- con password generata ->${user.password}<-inserito correttamente nel database.`);
+                    console.log(`\tUtente -> ${user.email} <- con password generata -> ${user.password} <- inserito correttamente nel database.`);
                 }
             });
         }
@@ -424,7 +427,7 @@ un oggetto "dizionaro" con il corrispettivo in inglese*/
 
 const categories = {
     'Titoli del momento': 'Trending',
-    'Classici TV': 'TV Classics',
+    'Classici TV': 'Docudrama', //Uso docudrama Visto che su ombd non é presente tale categoria
     'Serie TV': 'TV Series',
     'Cartoni': 'Cartoons',
     'Anime': 'Anime',
@@ -435,7 +438,7 @@ const categories = {
     'Marvel': 'Marvel',
     'Sitcom': 'Sitcom',
     'Documentari': 'Documentaries',
-    'Film di Fantascienza': 'Sci-Fi Movies',
+    'Film di Fantascienza': 'Sci-Fi',
     'Film per Famiglie': 'Family Movies'
 };
 
@@ -443,16 +446,19 @@ const categories = {
 
 async function fetchMovies(category) {
     const film = [];
-    for (let i = 1; i <= 20; i++) { //numero pagine
+    for (let i = 1; i <= 30; i++) { //numero pagine
         const response = await axios.get(`http://www.omdbapi.com/?s=${encodeURIComponent(category)}&page=${i}&apikey=${omdbApiKey}`);
         const data = response.data;
 
         if (data.Response === "True") {
             film.push(...data.Search);
         }
+        if (film.length >= 15) { //al raggiungimento di 15 film termino il ciclo
+            break;
+        }
         await delay(500);
     }
-    return film.slice(0, 15); //restituisco solo i primi 15 film
+    return film
 }
 
 async function populateFilmsWithApi() {

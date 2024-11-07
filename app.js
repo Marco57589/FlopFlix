@@ -4,9 +4,9 @@ const express = require('express');
 const session = require('express-session');
 
 const path = require('path');
-const bcrypt = require('bcrypt'); //libreria per usare bcrypt
-const crypto = require('crypto'); //libreria per usare aes-256
-const _ = require('lodash'); //libreria per confrontare oggetti
+const bcrypt = require('bcrypt'); //libreria per usare bcrypt (per le password)
+const crypto = require('crypto'); //libreria per usare aes-256 (per le mail)
+const _ = require('lodash'); //libreria che uso per confrontare gli oggetti
 const os = require('os');
 const fs = require('fs');  //file system
 
@@ -15,7 +15,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 require('dotenv').config();
 
-if (!fs.existsSync('.env')) {
+if (!fs.existsSync('.env')) { //controlliamo che il file .env sia presente
     console.error('File .env non trovato.');
     process.exit(1);
 }
