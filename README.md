@@ -114,5 +114,5 @@ To run this project, you will need to add the following environment variables to
 
 ## License
 
-[GNU v3.0](https://choosealicense.com/licenses/gpl-3.0/)
+[GNU v2.0](https://choosealicense.com/licenses/gpl-2.0/)
 
