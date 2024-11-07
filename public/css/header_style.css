@@ -30,11 +30,6 @@
     color: rgb(134, 12, 12) !important;
 }
 
-.search-form {
-    display: flex;
-    align-items: center;
-}
-
 .navbar.bg-transparent {
     background-color: transparent !important;
     transition: background-color 150ms ease-out;
@@ -102,11 +97,25 @@
 }
 
 @media (max-width: 768px) {
-    .navbar-nav li {
-        margin-left: 10px;
+    .navbar-nav{
+        align-items: center !important;
+    }
+    .navbar-nav li{
         margin-right: 20px !important;
+    }
+    .navbar-brand{
+        margin-right: 0px !important;
     }
     .search-input.show{
         width: 50vw !important;
+    }
+}
+@media (max-width: 480px) {
+    .navbar-nav li{
+        margin-right: 0px !important;
+    }
+    .collapse.show {
+        transition: all 0.3s ease-in-out;
+        margin-right: 0px;
     }
 }

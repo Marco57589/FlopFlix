@@ -4,7 +4,7 @@ body {
     min-height: 100vh;
     margin: 0;
     background-color: #141414 !important;
-    padding-top: calc(5vh + 5vw);
+    padding-top: calc(3vh + 3vw);
 }
 
 footer {
@@ -198,7 +198,7 @@ input {
 
 @media (max-width: 480px) {
     body {
-        padding-top: calc(15vh + 7vw);
+        padding-top: calc(7vh + 7vw);
     }
     .page-with-filter {
         text-align: center;

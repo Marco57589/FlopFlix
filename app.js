@@ -156,7 +156,7 @@ function queryDatabase(query, params = [], type) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve({ changes: this.changes });
+                    resolve({ changes: this.changes, lastID: this.lastID });
                 }
             });
         } else {
@@ -503,7 +503,8 @@ app.post('/register-step-2', ensureUnAuthenticated, (req, res, next) => {
                 .then(hashedPassword => {
                     return queryDatabase('INSERT INTO user (email, password) VALUES (?, ?)', [encryptedEmail, hashedPassword], 'run')
                         .then(result => {
-                            req.logIn({ id: result.changes, email: encryptedEmail }, (err) => {
+                            const newUserId = result.lastID; //assegno lultimo id presente nel db
+                            req.logIn({ id: newUserId, email: encryptedEmail }, (err) => {
                                 if (err) {
                                     return res.render('register-2', { error: 'Errore durante l\'accesso', email });
                                 }
@@ -1115,15 +1116,14 @@ app.post('/account', ensureAuthenticated, async (req, res) => {
         //visto che nella pagina dell'account i campi sono facoltativi (pui anche non riempirli tutti)
         //per evitare di fare una query dinamica ho preferito creare un nuovo utente updateUser
         //se i campi sono vuoi tengo i vecchi (precedenti) (nulli o con valore vecchio) mentre se sono presenti dei campi aggiornati uso quelli
-        
         const updatedUser = {  //normalizzo l'utente aggiornato per poterlo comparare con l'utente attuale
             id: userId,
             email: emailToUpdate,
             password: passwordToUpdate,
-            nome: nome || user.nome,
-            cognome: cognome || user.cognome,
-            ddn: ddn || user.ddn,
-            telefono: parseInt(telefono) || user.telefono,
+            nome: nome ? nome : null,
+            cognome: cognome ? cognome : null,
+            ddn: ddn ? ddn : null,
+            telefono: telefono ? parseInt(telefono) : null,
             ruolo: user.ruolo
         };
 

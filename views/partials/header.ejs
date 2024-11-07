@@ -28,9 +28,9 @@
         </ul>
 
         <div class="d-flex align-items-center">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 mr-2">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 mr-2 align-items-center">
                 <li class="nav-item">
-                    <form class="form-inline my-2 my-lg-0 search-form" action="/search" method="GET">
+                    <form class="form-inline my-2 my-lg-0" action="/search" method="GET">
                         <button class="btn search-btn text-white" type="button">
                             <i class="material-icons">search</i>
                         </button>
@@ -56,17 +56,17 @@
                 </li>
                 <% } else if (user && user.ruolo === 'admin') { %>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="account">Account</a>
+                    <a class="nav-link text-white mb-1" href="account">Account</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="logout">Logout</a>
+                    <a class="nav-link text-white mb-1" href="logout">Logout</a>
                 </li>
                 <% } else { %>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="login">Accedi</a>
+                    <a class="nav-link text-white mb-1" href="login">Accedi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="register-step-1">Registrati</a>
+                    <a class="nav-link text-white mb-1" href="register-step-1">Registrati</a>
                 </li>
                 <% } %>
             </ul>

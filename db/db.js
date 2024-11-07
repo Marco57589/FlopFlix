@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const sqlite3 = require('sqlite3').verbose(); //importiamo sqlite
 const bcrypt = require('bcrypt'); //usato per cifrare le password

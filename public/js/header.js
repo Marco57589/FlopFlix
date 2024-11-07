@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     window.addEventListener('scroll', function() { //al minimo scorrimeno verticale applico lo sfondo nero alla navbar 
-        if(this.document.title != 'Sfoglia per categoria'){ //in quanto in sfoglia categoria la ricerca é inclusa nell'header
+        if(this.document.title === 'FlopFlix'){ //in quanto in sfoglia categoria la ricerca é inclusa nell'header
             let navbar = document.querySelector('.navbar'); //seleziono la navbar
     
             if(window.scrollY > 1) { //rilevo lo scorrimento e aggiungo/rimuovo la classe dello sfondo nero
